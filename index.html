@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Polaris Digital Asset Management</title>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Polaris Digital Asset Management">
+    <meta property="og:description" content="Institutional investment management focused on emerging financial infrastructure.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://polarisdam.com">
+    <meta property="og:image" content="https://polarisdam.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Polaris Digital Asset Management">
+    <meta name="twitter:description" content="Institutional investment management focused on emerging financial infrastructure.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <!--
+        FONTS — Self-hosting setup
+        ==========================
+        For full privacy (zero third-party requests), download these font files
+        and place them in the site root alongside Trajan:
+
+        1. Spectral-SemiBold.woff2  — from https://fonts.google.com/specimen/Spectral
+        2. Inter-Regular.woff2      — from https://fonts.google.com/specimen/Inter
+        3. Inter-Medium.woff2       — from https://fonts.google.com/specimen/Inter
+
+        Then remove the Google Fonts <link> tags below.
+        The @font-face declarations are already configured for local files.
+
+        Once self-hosted woff2 files are in the site root, DELETE the three
+        lines immediately below this comment block (the Google Fonts lines).
+    -->
+    <!-- ⚠️ DELETE THESE 3 LINES after placing self-hosted font files ⚠️ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Spectral:wght@600&display=swap" rel="stylesheet">
+    <!-- ⚠️ END DELETE ⚠️ -->
+
+    <style>
+        /* === Self-hosted fonts === */
+        @font-face {
+            font-family: 'Trajan Pro 3';
+            src: url('/Trajan_Pro_3_Regular.woff') format('woff'),
+                 url('/Trajan_Pro_3_Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Self-hosted overrides — active when local files are present */
+        @font-face {
+            font-family: 'Spectral';
+            src: url('/Spectral-SemiBold.woff2') format('woff2');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('/Inter-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('/Inter-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* === Brand Color Tokens === */
+        :root {
+            --true-north-navy: #0A1628;
+            --quartz-white: #F8F9FA;
+            --signal-gold: #D4A853;
+            --polaris-teal: #2A9D8F;
+            --fiduciary-grey: #6B7280;
+            --mist-grey: #D1D5DB;
+        }
+
+        /* === Reset === */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background-color: var(--true-north-navy);
+            color: var(--quartz-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* === Global focus style for keyboard navigation === */
+        *:focus-visible {
+            outline: 1px solid rgba(42, 157, 143, 0.6);
+            outline-offset: 2px;
+        }
+
+        /* === Star Trail Canvas === */
+        #star-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* === Main Content === */
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* === Two-zone layout — fixed gap instead of space-between === */
+        .page-layout {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: center;
+            gap: 4.5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15vh max(1rem, 5vw) 6vh;
+        }
+
+        /* Upper zone: identity */
+        .identity-block {
+            max-width: 540px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        /* Lower zone: form — anchored right */
+        .form-block {
+            max-width: 380px;
+            align-self: flex-end;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        /* === Logo === */
+        .wordmark {
+            margin-bottom: 2.5rem;
+            user-select: none;
+        }
+
+        .logo-img {
+            display: block;
+            width: 420px;
+            height: auto;
+            /* Feather edges to blend with navy background */
+            mask-image: radial-gradient(ellipse 95% 92% at center, black 60%, transparent 78%);
+            -webkit-mask-image: radial-gradient(ellipse 95% 92% at center, black 60%, transparent 78%);
+        }
+
+        /* === Positioning Line === */
+        .positioning {
+            font-family: 'Spectral', Georgia, serif;
+            font-weight: 600;
+            font-size: 1.15rem;
+            line-height: 1.55;
+            color: var(--quartz-white);
+            text-align: left;
+            margin-bottom: 1.25rem;
+            max-width: 500px;
+            opacity: 0.92;
+        }
+
+        /* === Founder Line === */
+        .founder {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 400;
+            font-size: 0.925rem;
+            line-height: 1.6;
+            color: var(--mist-grey);
+            text-align: left;
+            margin-bottom: 0;
+            max-width: 480px;
+            opacity: 0.75;
+        }
+
+        /* === Form Trigger — progressive disclosure === */
+        .form-trigger {
+            font-family: 'Spectral', Georgia, serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--quartz-white);
+            opacity: 0.55;
+            text-align: left;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .form-trigger:hover {
+            opacity: 0.75;
+        }
+
+        .form-trigger:focus-visible {
+            outline: 1px solid rgba(42, 157, 143, 0.6);
+            outline-offset: 4px;
+        }
+
+        /* Plus/minus icon */
+        .form-trigger-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            position: relative;
+        }
+
+        .form-trigger-icon::before,
+        .form-trigger-icon::after {
+            content: '';
+            position: absolute;
+            background-color: var(--fiduciary-grey);
+            transition: transform 0.35s ease, opacity 0.35s ease;
+        }
+
+        .form-trigger-icon::before {
+            width: 12px;
+            height: 1px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .form-trigger-icon::after {
+            width: 1px;
+            height: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .form-trigger.is-expanded .form-trigger-icon::after {
+            transform: translate(-50%, -50%) rotate(90deg);
+            opacity: 0;
+        }
+
+        /* === Form Panel — hidden by default === */
+        .form-panel {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s ease, opacity 0.4s ease, margin 0.4s ease;
+            margin-top: 0;
+        }
+
+        .form-panel.is-visible {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 1.5rem;
+        }
+
+        /* === Contact Form — bottom-line inputs, reduced scale === */
+        .contact-form {
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .form-field label {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 500;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--fiduciary-grey);
+            opacity: 0.6;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--quartz-white);
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(107, 114, 128, 0.25);
+            border-radius: 0;
+            padding: 0.55rem 0 0.5rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+            -webkit-appearance: none;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
+            border-bottom-color: rgba(42, 157, 143, 0.5);
+        }
+
+        .form-field input:focus-visible,
+        .form-field textarea:focus-visible {
+            outline: none;
+        }
+
+        .form-field input::placeholder,
+        .form-field textarea::placeholder {
+            color: var(--fiduciary-grey);
+            opacity: 0.3;
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 72px;
+            line-height: 1.5;
+        }
+
+        /* Honeypot */
+        .form-hp {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            height: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .submit-btn {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: var(--mist-grey);
+            background: transparent;
+            border: 1px solid rgba(209, 213, 219, 0.2);
+            border-radius: 3px;
+            padding: 0.7rem 2.2rem;
+            cursor: pointer;
+            transition: background 0.25s ease, border-color 0.25s ease;
+            margin-top: 0.6rem;
+            align-self: flex-start;
+        }
+
+        .submit-btn:hover {
+            background: rgba(42, 157, 143, 0.06);
+            border-color: rgba(42, 157, 143, 0.4);
+        }
+
+        .submit-btn:active {
+            background: rgba(42, 157, 143, 0.1);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* === Form Confirmation === */
+        .form-confirmation {
+            display: none;
+            text-align: left;
+            padding: 1rem 0;
+        }
+
+        .form-confirmation p {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--quartz-white);
+            opacity: 0.7;
+        }
+
+        /* === Disclaimer === */
+        .disclaimer {
+            margin-top: 1.5rem;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: var(--fiduciary-grey);
+            text-align: left;
+            opacity: 0.45;
+            letter-spacing: 0.02em;
+        }
+
+        /* === Fade-in — reduced delay === */
+        .page-layout {
+            opacity: 0;
+            animation: fadeIn 1.4s ease-out 0.1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(3px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === Responsive === */
+        @media (max-width: 768px) {
+            .page-layout {
+                padding: 12vh 1.5rem 4vh;
+                justify-content: flex-start;
+                gap: 3rem;
+                min-height: auto;
+            }
+
+            .identity-block {
+                max-width: 100%;
+            }
+
+            .form-block {
+                align-self: flex-start;
+                max-width: 100%;
+            }
+
+            .wordmark {
+                margin-bottom: 2rem;
+            }
+.positioning {
+                font-size: 1.05rem;
+            }
+
+            .founder {
+                font-size: 0.875rem;
+            }
+
+            .contact-form {
+                max-width: 100%;
+            }
+        }
+
+        /* Tablets */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .page-layout {
+                padding: 14vh max(1.5rem, 4vw) 5vh;
+            }
+
+            .form-block {
+                max-width: 340px;
+            }
+        }
+
+        /* === Print === */
+        @media print {
+            body {
+                background: white;
+                color: #1a1a1a;
+            }
+
+            #star-canvas {
+                display: none;
+            }
+
+            .wordmark {
+                width: auto;
+            }
+
+            .positioning {
+                color: #1a1a1a;
+                opacity: 1;
+            }
+
+            .founder {
+                color: #4a4a4a;
+                opacity: 1;
+            }
+
+            .form-block {
+                display: none;
+            }
+
+            .page-layout {
+                min-height: auto;
+                padding: 2rem;
+            }
+
+            .disclaimer {
+                color: #666;
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Star Trail Animation -->
+    <canvas id="star-canvas" aria-hidden="true"></canvas>
+
+    <!-- Skip link — keyboard accessibility -->
+    <a href="#identity"
+       style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:100;color:var(--quartz-white);background:var(--true-north-navy);padding:0.5rem 1rem;font-family:Inter,sans-serif;font-size:0.85rem;text-decoration:none;"
+       onfocus="this.style.cssText='position:fixed;left:1rem;top:1rem;width:auto;height:auto;z-index:100;color:var(--quartz-white);background:var(--true-north-navy);padding:0.5rem 1rem;font-family:Inter,sans-serif;font-size:0.85rem;text-decoration:none;'"
+       onblur="this.style.cssText='position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;'"
+    >Skip to content</a>
+
+    <main class="content">
+        <div class="page-layout">
+
+            <!-- Identity Block -->
+            <div class="identity-block" id="identity">
+
+                <!-- Logo -->
+                <div class="wordmark" role="banner" aria-label="Polaris Digital Asset Management">
+                    <img src="data:image/webp;base64,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" alt="Polaris Digital Asset Management" class="logo-img" width="500" height="115">
+                </div>
+
+                <p class="positioning">Polaris Digital provides institutional investment management focused on emerging financial infrastructure.
+                </p>
+
+                <p class="founder">
+                    Founded by a veteran institutional allocator with fifteen years evaluating managers globally. Swiss&#8209;advised, Cayman&#8209;domiciled.
+                </p>
+
+            </div>
+
+            <!-- Form Block -->
+            <div class="form-block">
+
+                <button
+                    type="button"
+                    class="form-trigger"
+                    id="form-trigger"
+                    aria-expanded="false"
+                    aria-controls="form-panel"
+                >
+                    Inquiries
+                    <span class="form-trigger-icon" aria-hidden="true"></span>
+                </button>
+
+                <div class="form-panel" id="form-panel" role="region" aria-labelledby="form-trigger">
+
+                    <form
+                        id="contact-form"
+                        class="contact-form"
+                        action="https://usebasin.com/f/6bf1b84044fc"
+                        method="POST"
+                    >
+                        <input type="text" name="_gotcha" class="form-hp" tabindex="-1" autocomplete="off">
+
+                        <div class="form-field">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required autocomplete="name" placeholder="Full name">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required autocomplete="email" placeholder="Email address">
+                        </div>
+
+                        <div class="form-field">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" required placeholder="Your message"></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Submit</button>
+                    </form>
+
+                    <div id="form-confirmation" class="form-confirmation" role="status" aria-live="polite">
+                        <p>Message received.</p>
+                    </div>
+
+                </div>
+
+                <p class="disclaimer">
+                    This document is confidential and intended for qualified investors only.
+                </p>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+    /* ==========================================================================
+       STAR TRAIL ANIMATION
+       ========================================================================== */
+
+    (function() {
+        'use strict';
+
+        var canvas = document.getElementById('star-canvas');
+        var ctx = canvas.getContext('2d');
+
+        var CONFIG = {
+            revolutionTime: 160,
+            trailCount: 110,
+            centerX: 0.78,
+            centerY: 0.08,
+            minRadius: 18,
+            maxRadiusMultiplier: 0.95,
+            minArcLength: 0.06,
+            maxArcLength: 0.38,
+            minOpacity: 0.025,
+            maxOpacity: 0.10,
+            minWidth: 0.3,
+            maxWidth: 1.2,
+            polarisGlowRadius: 28,
+            polarisGlowOpacity: 0.22,
+            polarisCoreRadius: 2.0,
+            polarisCoreOpacity: 0.55,
+            polarisRingRadius: 6,
+            polarisRingOpacity: 0.15,
+            trailColor: { r: 248, g: 249, b: 250 },
+            taperSegments: 24,
+            pixelRatio: Math.min(window.devicePixelRatio || 1, 2)
+        };
+
+        var trails = [];
+        var width, height, centerX, centerY, maxRadius;
+        var rotationAngle = 0;
+        var lastTime = 0;
+
+        function seededRandom(seed) {
+            var s = seed;
+            return function() {
+                s = (s * 16807 + 0) % 2147483647;
+                return s / 2147483647;
+            };
+        }
+
+        var rand = seededRandom(73);
+
+        function generateTrails() {
+            trails = [];
+            maxRadius = Math.max(width, height) * CONFIG.maxRadiusMultiplier;
+
+            for (var i = 0; i < CONFIG.trailCount; i++) {
+                var t = rand();
+                var radiusFactor = Math.pow(t, 0.7);
+                var radius = CONFIG.minRadius + radiusFactor * (maxRadius - CONFIG.minRadius);
+                var distanceFactor = (radius - CONFIG.minRadius) / (maxRadius - CONFIG.minRadius);
+                var arcBase = CONFIG.minArcLength + distanceFactor * (CONFIG.maxArcLength - CONFIG.minArcLength);
+                var arcLength = arcBase * (0.3 + rand() * 0.7) * Math.PI * 2;
+                var startAngle = rand() * Math.PI * 2;
+                var distCurve = 1 - Math.pow(Math.abs(distanceFactor - 0.45) * 1.8, 2);
+                var opacityBase = CONFIG.minOpacity + Math.max(0, distCurve) * (CONFIG.maxOpacity - CONFIG.minOpacity);
+                var opacity = opacityBase * (0.4 + rand() * 0.6);
+                var lineWidth = CONFIG.minWidth + rand() * (CONFIG.maxWidth - CONFIG.minWidth);
+                var taperDirection = rand() > 0.5 ? 1 : 0;
+
+                trails.push({
+                    radius: radius,
+                    startAngle: startAngle,
+                    arcLength: arcLength,
+                    opacity: opacity,
+                    lineWidth: lineWidth,
+                    taperDirection: taperDirection,
+                    colorShift: (rand() - 0.5) * 12
+                });
+            }
+
+            for (var j = 0; j < 18; j++) {
+                var r = CONFIG.minRadius * 1.5 + rand() * (maxRadius * 0.8);
+                trails.push({
+                    radius: r,
+                    startAngle: rand() * Math.PI * 2,
+                    arcLength: (0.015 + rand() * 0.05) * Math.PI * 2,
+                    opacity: 0.12 + rand() * 0.08,
+                    lineWidth: 0.5 + rand() * 0.6,
+                    taperDirection: rand() > 0.5 ? 1 : 0,
+                    colorShift: (rand() - 0.5) * 6
+                });
+            }
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * CONFIG.pixelRatio;
+            canvas.height = height * CONFIG.pixelRatio;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            ctx.setTransform(CONFIG.pixelRatio, 0, 0, CONFIG.pixelRatio, 0, 0);
+            centerX = width * CONFIG.centerX;
+            centerY = height * CONFIG.centerY;
+            generateTrails();
+        }
+
+        function drawPolaris() {
+            var outerGlow = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, CONFIG.polarisGlowRadius);
+            outerGlow.addColorStop(0, 'rgba(222, 195, 140, ' + CONFIG.polarisGlowOpacity + ')');
+            outerGlow.addColorStop(0.15, 'rgba(222, 195, 140, ' + (CONFIG.polarisGlowOpacity * 0.5) + ')');
+            outerGlow.addColorStop(0.4, 'rgba(212, 168, 83, ' + (CONFIG.polarisGlowOpacity * 0.12) + ')');
+            outerGlow.addColorStop(1, 'rgba(212, 168, 83, 0)');
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, CONFIG.polarisGlowRadius, 0, Math.PI * 2);
+            ctx.fillStyle = outerGlow;
+            ctx.fill();
+
+            var ring = ctx.createRadialGradient(centerX, centerY, CONFIG.polarisRingRadius * 0.4, centerX, centerY, CONFIG.polarisRingRadius);
+            ring.addColorStop(0, 'rgba(232, 210, 165, ' + CONFIG.polarisRingOpacity + ')');
+            ring.addColorStop(1, 'rgba(212, 168, 83, 0)');
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, CONFIG.polarisRingRadius, 0, Math.PI * 2);
+            ctx.fillStyle = ring;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, CONFIG.polarisCoreRadius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(238, 218, 175, ' + CONFIG.polarisCoreOpacity + ')';
+            ctx.fill();
+
+            ctx.save();
+            ctx.globalAlpha = CONFIG.polarisCoreOpacity * 0.3;
+            ctx.strokeStyle = 'rgba(232, 210, 165, 1)';
+            ctx.lineWidth = 0.5;
+            var flareLen = 10;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY - flareLen);
+            ctx.lineTo(centerX, centerY + flareLen);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(centerX - flareLen, centerY);
+            ctx.lineTo(centerX + flareLen, centerY);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawTaperedArc(trail) {
+            var segments = CONFIG.taperSegments;
+            var r = CONFIG.trailColor.r;
+            var g = CONFIG.trailColor.g;
+            var b = CONFIG.trailColor.b;
+            var cr = Math.round(Math.min(255, Math.max(0, r + trail.colorShift)));
+            var cg = Math.round(Math.min(255, Math.max(0, g + trail.colorShift * 0.8)));
+            var cb = Math.round(Math.min(255, Math.max(0, b + trail.colorShift * 0.3)));
+
+            for (var s = 0; s < segments; s++) {
+                var t0 = s / segments;
+                var t1 = (s + 1) / segments;
+                var segmentOpacity;
+
+                if (trail.taperDirection === 0) {
+                    segmentOpacity = trail.opacity * (1 - t0 * t0);
+                } else {
+                    segmentOpacity = trail.opacity * (t0 * t0);
+                }
+
+                if (segmentOpacity < 0.003) continue;
+
+                var a0 = trail.startAngle + t0 * trail.arcLength;
+                var a1 = trail.startAngle + t1 * trail.arcLength;
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, trail.radius, a0, a1);
+                ctx.strokeStyle = 'rgba(' + cr + ', ' + cg + ', ' + cb + ', ' + segmentOpacity + ')';
+                ctx.lineWidth = trail.lineWidth;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+        }
+
+        function draw(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            var delta = (timestamp - lastTime) / 1000;
+            lastTime = timestamp;
+
+            var rotationSpeed = (Math.PI * 2) / CONFIG.revolutionTime;
+            rotationAngle += rotationSpeed * delta;
+
+            ctx.clearRect(0, 0, width, height);
+            drawPolaris();
+
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(rotationAngle);
+            ctx.translate(-centerX, -centerY);
+
+            for (var i = 0; i < trails.length; i++) {
+                drawTaperedArc(trails[i]);
+            }
+
+            ctx.restore();
+            requestAnimationFrame(draw);
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+        requestAnimationFrame(draw);
+    })();
+
+
+    /* ==========================================================================
+       FORM — PROGRESSIVE DISCLOSURE + AJAX SUBMISSION
+       ========================================================================== */
+
+    (function() {
+        'use strict';
+
+        var trigger = document.getElementById('form-trigger');
+        var panel = document.getElementById('form-panel');
+        var form = document.getElementById('contact-form');
+        var confirmation = document.getElementById('form-confirmation');
+
+        // Toggle form visibility
+        trigger.addEventListener('click', function() {
+            var isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded) {
+                panel.classList.remove('is-visible');
+                trigger.classList.remove('is-expanded');
+                trigger.setAttribute('aria-expanded', 'false');
+            } else {
+                panel.classList.add('is-visible');
+                trigger.classList.add('is-expanded');
+                trigger.setAttribute('aria-expanded', 'true');
+                // Focus first field after animation completes
+                setTimeout(function() {
+                    document.getElementById('name').focus();
+                }, 420);
+            }
+        });
+
+        // AJAX form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var btn = form.querySelector('.submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'Sending\u2026';
+
+            var formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    form.style.display = 'none';
+                    confirmation.style.display = 'block';
+                    trigger.style.display = 'none';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Submit';
+                }
+            })
+            .catch(function() {
+                btn.disabled = false;
+                btn.textContent = 'Submit';
+            });
+        });
+    })();
+    </script>
+
+</body>
+</html>
